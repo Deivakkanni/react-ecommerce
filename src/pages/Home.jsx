@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 export default function Home() {
+    const { addToCart } = useContext(CartContext);
     const [product, setproduct] = useState([])
     const [loading, setloading] = useState(true)
     const [error, seterror] = useState(null)
@@ -23,7 +27,7 @@ export default function Home() {
             }
         }
         fetchproduct()
-    }, [product])
+    }, [])
 
     if (loading) {
         return (
@@ -41,22 +45,30 @@ export default function Home() {
             </div>
         )
     }
+
     return (
         <div className="container mt-4">
             <div className="row">
                 {product.map(product => (
                     <div className="col-md-3 mb-4" key={product.id}>
                         <div className="card h-100">
-                            <img
-                                src={product.image}
-                                className="card-img-top p-3"
-                                height="200"
-                                style={{ objectFit: "contain" }}
-                            />
+                            <Link to={`/product/${product.id}`} className="text-decoration-none text-dark">
+                                <img
+                                    src={product.image}
+                                    className="card-img-top p-3"
+                                    height="200"
+                                    style={{ objectFit: "contain" }}
+                                    alt={product.title} />
+                            </Link>
                             <div className="card-body">
-                                <h6>{product.title.substring(0, 40)}...</h6>
-                                <p className="fw-bold">${product.price}</p>
-                                <button className="btn btn-primary w-100">
+
+                                <Link to={`/product/${product.id}`} className="text-decoration-none text-dark">
+                                    <h6>{product.title.substring(0, 40)}...</h6>
+                                </Link>                                <p className="fw-bold">${product.price}</p>
+                                <button
+                                    className="btn btn-primary w-100"
+                                    onClick={() => addToCart(product)}
+                                >
                                     Add to Cart
                                 </button>
                             </div>
@@ -64,6 +76,6 @@ export default function Home() {
                     </div>
                 ))}
             </div>
-        </div>
+        </div >
     )
 }
